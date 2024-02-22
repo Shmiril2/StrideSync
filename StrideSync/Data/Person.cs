@@ -16,9 +16,6 @@ namespace StrideSync.Data
         public double Weight { get; set; }
         
         [Required]
-        public int MyProperty { get; set; }
-        
-        [Required]
         public string Gender { get; set; }
     }
 }
