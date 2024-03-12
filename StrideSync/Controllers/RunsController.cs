@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using StrideSync.Data;
+using StrideSync.Data.Entities;
 
-namespace StrideSync.Controllers
+namespace StrideSync.Web.Controllers
 {
     public class RunsController : Controller
     {
@@ -53,9 +53,8 @@ namespace StrideSync.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [Authorize]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Distance,Time")] Run run)
+        public async Task<IActionResult> Create([Bind("Distance,Time,Id")] Run run)
         {
             if (ModelState.IsValid)
             {
@@ -86,9 +85,8 @@ namespace StrideSync.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [Authorize]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Distance,Time")] Run run)
+        public async Task<IActionResult> Edit(int id, [Bind("Distance,Time,Id")] Run run)
         {
             if (id != run.Id)
             {
@@ -138,7 +136,6 @@ namespace StrideSync.Controllers
 
         // POST: Runs/Delete/5
         [HttpPost, ActionName("Delete")]
-        [Authorize]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {

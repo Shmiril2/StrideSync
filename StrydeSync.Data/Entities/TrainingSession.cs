@@ -1,0 +1,27 @@
+﻿using StrideSync.Data.Entities.Abstractions;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace StrideSync.Data.Entities
+{
+    public class TrainingSession : BaseEntity
+    {
+        public TrainingSession()
+        {
+            Exercises = new HashSet<Exercise>();
+            Runs = new HashSet<Run>();
+        }
+
+        [Required]
+        public string Name { get; set; }
+        [AllowNull]
+        public virtual ICollection<Exercise>? Exercises { get; set; }
+        [AllowNull]
+        public virtual ICollection<Run>? Runs { get; set; }
+    }
+}

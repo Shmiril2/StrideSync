@@ -3,7 +3,6 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using StrideSync.Data;
 
@@ -12,15 +11,13 @@ using StrideSync.Data;
 namespace StrideSync.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240222205146_PersonData")]
-    partial class PersonData
+    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
     {
-        /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.2")
+                .HasAnnotation("ProductVersion", "8.0.1")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -227,7 +224,7 @@ namespace StrideSync.Data.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("StrideSync.Data.Person", b =>
+            modelBuilder.Entity("StrideSync.Data.Entities.Exercise", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -235,14 +232,17 @@ namespace StrideSync.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("Age")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Gender")
+                    b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Height")
+                    b.Property<int>("Repetitions")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Sets")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("TrainingSessionId")
                         .HasColumnType("int");
 
                     b.Property<double>("Weight")
@@ -250,10 +250,12 @@ namespace StrideSync.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("People");
+                    b.HasIndex("TrainingSessionId");
+
+                    b.ToTable("Exercises");
                 });
 
-            modelBuilder.Entity("StrideSync.Data.Run", b =>
+            modelBuilder.Entity("StrideSync.Data.Entities.Run", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -267,9 +269,31 @@ namespace StrideSync.Data.Migrations
                     b.Property<TimeSpan>("Time")
                         .HasColumnType("time");
 
+                    b.Property<int?>("TrainingSessionId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
+                    b.HasIndex("TrainingSessionId");
+
                     b.ToTable("Runs");
+                });
+
+            modelBuilder.Entity("StrideSync.Data.Entities.TrainingSession", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("TrainingSessions");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -321,6 +345,27 @@ namespace StrideSync.Data.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("StrideSync.Data.Entities.Exercise", b =>
+                {
+                    b.HasOne("StrideSync.Data.Entities.TrainingSession", null)
+                        .WithMany("Exercises")
+                        .HasForeignKey("TrainingSessionId");
+                });
+
+            modelBuilder.Entity("StrideSync.Data.Entities.Run", b =>
+                {
+                    b.HasOne("StrideSync.Data.Entities.TrainingSession", null)
+                        .WithMany("Runs")
+                        .HasForeignKey("TrainingSessionId");
+                });
+
+            modelBuilder.Entity("StrideSync.Data.Entities.TrainingSession", b =>
+                {
+                    b.Navigation("Exercises");
+
+                    b.Navigation("Runs");
                 });
 #pragma warning restore 612, 618
         }

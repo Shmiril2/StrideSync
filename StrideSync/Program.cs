@@ -1,6 +1,10 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using StrideSync.Data;
+using StrideSync.Data.Repositories.Abstractions;
+using StrideSync.Data.Repositories;
+using StrideSync.Service.Abstractions;
+using StrideSync.Service;
 
 namespace StrideSync
 {
@@ -19,6 +23,12 @@ namespace StrideSync
             builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             builder.Services.AddControllersWithViews();
+
+            builder.Services.AddTransient(typeof(ICrudRepository<>), typeof(CrudRepository<>));
+            builder.Services.AddTransient<IRunRepository, RunRepository>();
+            builder.Services.AddTransient<IRunService, RunService>();
+
+            builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
             var app = builder.Build();
 
