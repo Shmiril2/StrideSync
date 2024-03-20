@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace StrideSync.Service.DTOs
 {
-    internal class ExerciseCreateEditDTO
+    public class ExerciseCreateEditDTO:BaseDTO
     {
         public string Name { get; set; }
         public string MuscleGroup { get; set; }
